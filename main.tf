@@ -63,6 +63,6 @@ module "s3-webapp" {
 module "ecs" {
   source  = "terraform-aws-modules/ecs/aws"
   version = "3.4.1"
-  name = "ecs-module-9"
+  name = "ecs-module-1"
   # insert required variables here
 }
