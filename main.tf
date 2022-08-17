@@ -22,13 +22,7 @@ provider "aws" {
   region = var.region
 }
 
-module "module" {
-  source  = "app.terraform.io/tyreepearson/module/aws"
-  name    = var.name
-  region  = var.region
-  prefix  = var.prefix
-  version = "1.0.0"
-}
+
 data "aws_ami" "ubuntu" {
   most_recent = true
 
