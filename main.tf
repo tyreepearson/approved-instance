@@ -44,7 +44,7 @@ resource "aws_instance" "web" {
   instance_type =var.instance_size
 
   tags = {
-    Name = "HelloWorld"
+    Name = "HelloWorld1"
   }
 }
 # module "s3-webapp" {
