@@ -3,7 +3,7 @@ terraform {
     aws = {
       source = "hashicorp/aws"
     }
-        random = {
+    random = {
       source  = "hashicorp/random"
       version = "3.0.1"
     }
@@ -18,6 +18,10 @@ terraform {
 
 }
 
+provider "hcp" {
+
+
+}
 provider "aws" {
   region = var.region
 }
@@ -47,6 +51,32 @@ resource "aws_instance" "web" {
     Name = "HelloWorld1"
   }
 }
+
+data "hcp_packer_iteration" "ubuntu" {
+  bucket_name = "learn-packer-ubuntu"
+  channel     = "production"
+}
+
+data "hcp_packer_image" "ubuntu_us_east_2" {
+  bucket_name    = "learn-packer-ubuntu"
+  cloud_provider = "aws"
+  iteration_id   = data.hcp_packer_iteration.ubuntu.ulid
+  region         = "us-east-2"
+}
+
+resource "aws_instance" "app_server" {
+  ami           = data.hcp_packer_image.ubuntu_us_east_2.cloud_image_id
+  instance_type = "t2.micro"
+  tags = {
+    Name = "Learn-HCP-Packer"
+  }
+}
+module "ecs" {
+  source  = "terraform-aws-modules/ecs/aws"
+  version = "3.4.1"
+  name = "ecs-module-6"
+  # insert required variables here
+}
 # module "s3-webapp" {
 #   source  = "app.terraform.io/tyreepearson/s3-webapp/aws"
 #   name    = var.name
@@ -54,9 +84,3 @@ resource "aws_instance" "web" {
 #   prefix  = var.prefix
 #   version = "1.0.0"
 # }
-module "ecs" {
-  source  = "terraform-aws-modules/ecs/aws"
-  version = "3.4.1"
-  name = "ecs-module-6"
-  # insert required variables here
-}
