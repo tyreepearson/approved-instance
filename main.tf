@@ -48,7 +48,7 @@ resource "aws_instance" "web" {
   instance_type =var.instance_size
 
   tags = {
-    Name = "HelloWorld1"
+    Name = "HelloWorld2"
   }
 }
 
