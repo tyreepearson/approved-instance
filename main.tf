@@ -74,8 +74,8 @@ resource "aws_instance" "app_server" {
   lifecycle {
     precondition {
       condition = try(
-        formatdate("YYYYMMDDhhmmss", data.hcp_packer_image.ubuntu_us_east_2.revoke_at) > formatdate("YYYYMMDDhhmmss", timestamp()),
-        data.hcp_packer_image.ubuntu_us_east_2.revoke_at == null
+        formatdate("YYYYMMDDhhmmss", data.hcp_packer_image.ubuntu_us_east_1.revoke_at) > formatdate("YYYYMMDDhhmmss", timestamp()),
+        data.hcp_packer_image.ubuntu_us_east_1.revoke_at == null
       )
       error_message = "Source AMI is revoked."
     }
