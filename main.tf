@@ -18,10 +18,7 @@ terraform {
 
 }
 
-provider "hcp" {
-
-
-}
+provider "hcp" {}
 provider "aws" {
   region = var.region
 }
