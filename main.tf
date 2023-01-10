@@ -54,16 +54,17 @@ data "hcp_packer_iteration" "ubuntu" {
   channel     = "production"
 }
 
-data "hcp_packer_image" "ubuntu_us_east_1" {
+data "hcp_packer_image" "ubuntu_us_east_2" {
   bucket_name    = "learn-packer-ubuntu"
   cloud_provider = "aws"
   iteration_id   = data.hcp_packer_iteration.ubuntu.ulid
-  region         = "us-east-1"
+  region         = "us-east-2"
 }
 
 
+
 resource "aws_instance" "app_server" {
-  ami           = data.hcp_packer_image.ubuntu_us_east_1.cloud_image_id
+  ami           = data.hcp_packer_image.ubuntu_us_east_2.cloud_image_id
   instance_type = "t2.micro"
   tags = {
     Name = "Learn-HCP-Packer"
@@ -71,21 +72,20 @@ resource "aws_instance" "app_server" {
   lifecycle {
     precondition {
       condition = try(
-        formatdate("YYYYMMDDhhmmss", data.hcp_packer_image.ubuntu_us_east_1.revoke_at) > formatdate("YYYYMMDDhhmmss", timestamp()),
-        data.hcp_packer_image.ubuntu_us_east_1.revoke_at == null
+        formatdate("YYYYMMDDhhmmss", data.hcp_packer_image.ubuntu_us_east_2.revoke_at) > formatdate("YYYYMMDDhhmmss", timestamp()),
+        data.hcp_packer_image.ubuntu_us_east_2.revoke_at == null
       )
       error_message = "Source AMI is revoked."
     }
   }
 }
 
-
-module "ecs" {
-  source  = "terraform-aws-modules/ecs/aws"
-  version = "3.4.1"
-  name = "ecs-module-6"
-  # insert required variables here
-}
+# module "ecs" {
+#   source  = "terraform-aws-modules/ecs/aws"
+#   version = "3.4.1"
+#   name = "ecs-module-6"
+#   # insert required variables here
+# }
 # module "s3-webapp" {
 #   source  = "app.terraform.io/tyreepearson/s3-webapp/aws"
 #   name    = var.name
